@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "framework": "astro",
+  "buildCommand": "npm ci && npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": true
+}

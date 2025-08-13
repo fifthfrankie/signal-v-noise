@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signal vs Noise — To‑Do</title>
+    <meta name="description" content="A really simple two-column to-do app to separate Signal and Noise." />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="header-inner">
+        <div></div>
+        <div class="header-right">
+          <div id="today" class="date-muted"></div>
+          <button id="themeToggle" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="composer">
+      <input id="taskInput" type="text" placeholder="Task description…" aria-label="Task description" />
+      <div class="composer-actions">
+        <button id="addSignalBtn" class="btn btn-primary">Add to Signal</button>
+        <button id="addNoiseBtn" class="btn btn-ghost">Add to Noise</button>
+      </div>
+      <div class="composer-hint">Press Enter to add to Signal · Press X to add to Noise · N to focus</div>
+    </section>
+
+    
+
+  <main class="boards">
+      <section class="board" aria-labelledby="signalHeading">
+        <div class="board-header">
+          <h2 id="signalHeading">Signal</h2>
+          <small class="hint">Top 3–5 must-do items for today</small>
+        </div>
+  <ul id="signalList" class="list" data-list="signal" aria-describedby="signalHint"></ul>
+        <div id="signalHint" class="visually-hidden">Drop tasks here to mark as Signal.</div>
+      </section>
+
+      <section class="board" aria-labelledby="noiseHeading">
+        <div class="board-header">
+          <h2 id="noiseHeading">Noise</h2>
+          <small class="hint">Delegate, delay, or drop</small>
+        </div>
+  <ul id="noiseList" class="list" data-list="noise" aria-describedby="noiseHint"></ul>
+        <div id="noiseHint" class="visually-hidden">Drop tasks here to mark as Noise.</div>
+      </section>
+    </main>
+
+    
+
+    <div id="emptySignal" class="empty hidden">Add your top 3–5 must‑do items here.</div>
+    <div id="emptyNoise" class="empty hidden">Everything else goes here — delegate, delay or drop.</div>
+
+    <template id="taskItemTemplate">
+      <li class="task" draggable="true">
+        <button class="drag" title="Drag to move" aria-label="Drag to move" tabindex="-1">⋮⋮</button>
+        <label class="task-main">
+          <input type="checkbox" class="done" />
+          <span class="text"></span>
+        </label>
+        <div class="task-actions">
+          <button class="icon edit" title="Edit" aria-label="Edit">✏️</button>
+          <button class="icon delete" title="Delete" aria-label="Delete">🗑️</button>
+        </div>
+      </li>
+    </template>
+
+    <div id="toasts" class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+  </html>

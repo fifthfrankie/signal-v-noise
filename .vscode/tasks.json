@@ -1,0 +1,106 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"install"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Start dev server",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"--port",
+				"5174"
+			],
+			"isBackground": true,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Dev: astro",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"--port",
+				"5174"
+			],
+			"isBackground": true,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build: astro",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build: astro (retry)",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Dev build check",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$npm-stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Dev server ping",
+			"type": "shell",
+			"command": "curl",
+			"args": [
+				"-s",
+				"http://localhost:5174/ | head -n 5"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

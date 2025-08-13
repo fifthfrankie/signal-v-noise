@@ -1,0 +1,105 @@
+* { box-sizing: border-box; }
+:root {
+  --bg: #0b0c10;
+  --panel: rgba(21,22,26,0.9);
+  --muted: #a0a3ab;
+  --text: #e6e6e6;
+  --accent: #45c1ff;
+  --accent-2: #27d07c;
+  --danger: #ff5d5d;
+  --outline: #2a2d34;
+  --shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+:root.light {
+  --bg: #f6f7fb;
+  --panel: rgba(255,255,255,0.9);
+  --muted: #6b7280;
+  --text: #0b0c10;
+  --accent: #2563eb;
+  --accent-2: #059669;
+  --danger: #dc2626;
+  --outline: #e5e7eb;
+  --shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+html, body { height: 100%; }
+html { overflow-x: hidden; }
+body {
+  margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 800px at 10% 10%, rgba(69,193,255,0.08), transparent 60%),
+              radial-gradient(1000px 700px at 90% 20%, rgba(39,208,124,0.08), transparent 60%),
+              linear-gradient(180deg, rgba(15,16,22,1) 0%, rgba(11,12,16,1) 100%);
+  color: var(--text);
+}
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 0; background: transparent;
+  position: sticky; top: 0; z-index: 10;
+  backdrop-filter: none;
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; width: min(1100px, 100%); margin: 0 auto; padding: 0 20px; }
+.app-header h1 { font-size: 20px; margin: 0; }
+.header-right { display: flex; gap: 10px; align-items: center; color: var(--muted); }
+.date-muted { color: #9aa0a6; font-size: 13px; }
+.icon-btn { border: 1px solid var(--outline); background: #12131a; color: var(--text); padding: 6px 8px; border-radius: 8px; cursor: pointer; transition: transform .12s ease, background .2s ease; }
+.icon-btn:hover { transform: translateY(-1px); }
+
+.composer { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 18px 20px; width: min(1100px, 100%); margin: 0 auto; justify-items: center; }
+.composer input { width: min(760px, 100%); padding: 16px 16px; font-size: 18px; border: 1px solid var(--outline); border-radius: 16px; background: rgba(15,17,23,0.6); color: var(--text); box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, var(--shadow); backdrop-filter: blur(12px); text-align: center; }
+.composer-hint { grid-column: 1 / -1; color: var(--muted); font-size: 12px; padding-left: 4px; }
+.composer-actions { display: flex; align-items: center; gap: 10px; justify-self: center; }
+.toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; }
+
+.stats, .stat, .progress, .bar { display: none; }
+
+.boards { display: grid; grid-template-columns: 4fr 1fr; gap: 16px; padding: 0 20px 20px; width: min(1100px, 100%); margin: 0 auto; }
+.board { background: rgba(21,22,26,0.7); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; min-height: 360px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); transition: border-color .2s ease, transform .08s ease, background .2s ease; backdrop-filter: blur(14px); }
+.board:hover { border-color: #3a3f48; }
+.board-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.board h2 { margin: 6px 0; font-size: 16px; opacity: 0.9; }
+.hint { color: var(--muted); opacity: 0.7; }
+
+.list { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 8px; min-height: 260px; }
+.list.drag-over { outline: 2px dashed var(--accent); outline-offset: -4px; border-radius: 12px; background: rgba(69,193,255,0.06); }
+
+.task { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; background: rgba(15,17,23,0.55); box-shadow: 0 8px 24px rgba(0,0,0,0.3); transition: transform .06s ease, border-color .15s ease, background .2s ease; backdrop-filter: blur(10px); }
+.task:hover { border-color: #3a3f48; }
+.task .drag { cursor: grab; border: none; background: transparent; color: var(--muted); font-size: 16px; }
+.task .task-main { display: flex; align-items: center; gap: 12px; }
+.task .task-main .text { line-height: 1.3; font-size: 16px; }
+.inline-edit { width: 100%; padding: 6px 8px; border: 1px solid var(--outline); border-radius: 8px; background: #0f1117; color: var(--text); font: inherit; }
+.task.done { background: rgba(39,208,124,0.06); }
+.task.done .text { color: var(--muted); text-decoration: line-through; }
+.task .task-actions { display: flex; gap: 6px; }
+.task .icon { border: none; background: transparent; cursor: pointer; font-size: 16px; transition: transform .12s ease; }
+.task .icon:active { transform: scale(0.96); }
+.task .icon.delete { color: var(--danger); }
+
+.app-footer { display: none; }
+
+.btn { border: 1px solid var(--outline); background: rgba(18,19,26,0.85); color: var(--text); padding: 12px 16px; border-radius: 16px; cursor: pointer; transition: transform .12s ease, box-shadow .2s ease, background .2s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.25); backdrop-filter: blur(10px); font-size: 16px; }
+.btn:hover { border-color: #3a3f48; transform: translateY(-1px); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #051018; }
+.btn-secondary { background: var(--accent-2); border-color: var(--accent-2); color: #04140b; }
+.btn-ghost { background: rgba(255,255,255,0.05); box-shadow: none; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: #140404; }
+
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+@media (max-width: 800px) {
+  .boards { grid-template-columns: 1fr; }
+}
+
+/* Empty states */
+.empty { text-align: center; color: var(--muted); padding: 10px 0 16px; }
+.hidden { display: none; }
+
+/* Toasts */
+.toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 50; }
+.toast { background: var(--panel); border: 1px solid var(--outline); color: var(--text); padding: 10px 12px; border-radius: 10px; box-shadow: var(--shadow); animation: slideIn .2s ease; }
+@keyframes slideIn { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Bigger, cleaner checkboxes */
+.task .task-main input[type="checkbox"] {
+  width: 22px; height: 22px; accent-color: var(--accent);
+}
