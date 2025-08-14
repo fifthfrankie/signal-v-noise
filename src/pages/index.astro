@@ -10,10 +10,10 @@ import "../styles.css";
     <title>Signal vs Noise</title>
   </head>
   <body>
-      <div id="cursor-glow"></div>
-      <div class="keystrokes" id="keystrokes"></div>
-      <div class="toast" id="toast"></div>
-      <div class="min-h-screen relative z-10">
+    <div id="cursor-glow"></div>
+    <div class="keystrokes" id="keystrokes"></div>
+    <div class="toast" id="toast"></div>
+    <div class="min-h-screen relative z-10">
       <header class="px-5 py-3 flex items-center justify-between relative z-10 text-neutral-400">
         <div class="text-sm opacity-80"><a href="/" class="hover:underline">Signal vs Noise</a></div>
         <div class="flex items-center gap-4">
@@ -21,7 +21,7 @@ import "../styles.css";
           <div id="today" class="text-sm"></div>
         </div>
       </header>
-        <main class="px-5 relative z-10">
+      <main class="px-5 relative z-10">
         <TaskBoard client:load />
         <footer class="px-1 py-6 mt-6 text-center text-neutral-500 text-xs">
           <a href="/shortcuts" class="opacity-80 hover:opacity-100 hover:underline">Shortcuts</a>
@@ -29,294 +29,132 @@ import "../styles.css";
       </main>
     </div>
     <script>
-    // Cursor-follow glow
-    const glow = document.getElementById('cursor-glow');
-        if (glow) {
-          let raf = 0; let x = '50%'; let y = '50%'; let pending = false;
-          const update = () => { pending = false; glow.style.setProperty('--x', x); glow.style.setProperty('--y', y); };
-          window.addEventListener('mousemove', (e) => {
-            x = e.clientX + 'px'; y = e.clientY + 'px';
-            if (!pending) { pending = true; raf = requestAnimationFrame(update); }
-          });
-        }
+      // Cursor-follow glow
+      const glow = document.getElementById('cursor-glow');
+      if (glow) {
+        let raf = 0; let x = '50%'; let y = '50%'; let pending = false;
+        const update = () => { pending = false; glow.style.setProperty('--x', x); glow.style.setProperty('--y', y); };
+        window.addEventListener('mousemove', (e) => {
+          x = e.clientX + 'px'; y = e.clientY + 'px';
+          if (!pending) { pending = true; raf = requestAnimationFrame(update); }
+        });
+      }
 
-    // Today label
-  const el = document.getElementById('today');
+      // Today label
+      const el = document.getElementById('today');
       if (el) {
         const d = new Date();
         el.textContent = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
       }
-  // Force solid glass style by default
-  document.documentElement.classList.add('style-solid');
+      // Force solid glass style by default
+      document.documentElement.classList.add('style-solid');
 
-        // Subtle click ripple for buttons
-        const addRipple = (target, x, y) => {
-          const rect = target.getBoundingClientRect();
-          const r = Math.max(rect.width, rect.height);
-          const span = document.createElement('span');
-          span.className = 'ripple';
-          span.style.width = span.style.height = r + 'px';
-          span.style.left = (x - rect.left - r/2) + 'px';
-          span.style.top = (y - rect.top - r/2) + 'px';
-          const prevPos = getComputedStyle(target).position;
-          if (prevPos === 'static') target.style.position = 'relative';
-          target.style.overflow = 'hidden';
-          target.appendChild(span);
-          span.addEventListener('animationend', () => {
-            span.remove();
-            if (prevPos === 'static') target.style.position = '';
-            target.style.overflow = '';
-          });
-        };
-        document.addEventListener('click', (e) => {
-          const t = e.target;
-          if (!(t instanceof HTMLElement)) return;
-          const btn = t.closest('.btn, .icon-btn');
-          if (btn instanceof HTMLElement) addRipple(btn, e.clientX, e.clientY);
+      // Subtle click ripple for buttons
+      const addRipple = (target, x, y) => {
+        const rect = target.getBoundingClientRect();
+        const r = Math.max(rect.width, rect.height);
+        const span = document.createElement('span');
+        span.className = 'ripple';
+        span.style.width = span.style.height = r + 'px';
+        span.style.left = (x - rect.left - r/2) + 'px';
+        span.style.top = (y - rect.top - r/2) + 'px';
+        const prevPos = getComputedStyle(target).position;
+        if (prevPos === 'static') target.style.position = 'relative';
+        target.style.overflow = 'hidden';
+        target.appendChild(span);
+        span.addEventListener('animationend', () => {
+          span.remove();
+          if (prevPos === 'static') target.style.position = '';
+          target.style.overflow = '';
         });
+      };
+      document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (!(t instanceof HTMLElement)) return;
+        const btn = t.closest('.btn, .icon-btn');
+        if (btn instanceof HTMLElement) addRipple(btn, e.clientX, e.clientY);
+      });
 
-        // Optional token gate for isolated testing
-        try {
-          const gateToken = (import.meta.env.PUBLIC_INVITE_TOKEN || '').trim();
-          if (gateToken) {
-            const u = new URL(window.location.href);
-            const t = (u.searchParams.get('t') || '').trim();
-            if (t !== gateToken) {
-              const overlay = document.createElement('div');
-              overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:50;color:#fff;backdrop-filter:blur(6px)';
-              overlay.innerHTML = '<div class="glass p-4"><div class="text-center">Access restricted. Append ?t=YOUR_TOKEN to the URL.</div></div>';
-              document.body.appendChild(overlay);
-            }
-          }
-        } catch {}
-
-        // Keystroke HUD: larger and only for shortcuts (modifiers or known app shortcuts)
-        const ks = document.getElementById('keystrokes');
-        if (ks) {
-          let hideTimer;
-          let hudDuration = 900;
-          const show = (label) => {
-            ks.textContent = label;
-            ks.classList.add('show');
-            clearTimeout(hideTimer);
-            hideTimer = setTimeout(() => ks.classList.remove('show'), hudDuration);
-          };
-          window.addEventListener('keydown', (e) => {
-            // Only show if it's a shortcut, not when typing in fields
-            const active = document.activeElement;
-            const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || (active instanceof HTMLElement && active.isContentEditable));
-            const key = e.key;
-            const isModifier = key === 'Shift' || key === 'Control' || key === 'Meta' || key === 'Alt';
-            const isPrintable = key.length === 1;
-            const known = ['Enter', 'Escape', 'Backspace', 'Delete', 'Tab'];
-            const appShortcuts = ['a', 'f']; // a=focus composer, f=focus signal
-            const isAppShortcut = appShortcuts.includes(key.toLowerCase());
-            const isShortcut = isModifier || e.metaKey || e.ctrlKey || e.altKey || known.includes(key) || isAppShortcut;
-            if (!isShortcut) return;
-            if (isPrintable && !isAppShortcut) return; // don't show raw character typing
-            if (isTyping && !isAppShortcut) return; // suppress when typing, except our app shortcuts
-
-            const parts = [];
-            if (e.metaKey) parts.push('Cmd');
-            if (e.ctrlKey) parts.push('Ctrl');
-            if (e.altKey) parts.push('Alt');
-            if (e.shiftKey) parts.push('Shift');
-            parts.push(isPrintable ? key.toUpperCase() : key);
-            show(parts.join('+'));
-          });
-          // Demo toggle extends HUD duration
-          const demoBtn = document.getElementById('demo-toggle');
-          if (demoBtn) {
-            let demo = false;
-            const setDemo = (v) => {
-              demo = v;
-              hudDuration = demo ? 1800 : 900;
-              demoBtn.classList.toggle('active', demo);
-              // Share with Svelte
-              window.__svns_demo = demo;
-              window.dispatchEvent(new CustomEvent('svns-demo', { detail: demo }));
-            };
-            demoBtn.addEventListener('click', () => setDemo(!demo));
+      // Optional token gate for isolated testing
+      try {
+        const gateToken = (import.meta.env.PUBLIC_INVITE_TOKEN || '').trim();
+        if (gateToken) {
+          const u = new URL(window.location.href);
+          const t = (u.searchParams.get('t') || '').trim();
+          if (t !== gateToken) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:50;color:#fff;backdrop-filter:blur(6px)';
+            overlay.innerHTML = '<div class="glass p-4"><div class="text-center">Access restricted. Append ?t=YOUR_TOKEN to the URL.</div></div>';
+            document.body.appendChild(overlay);
           }
         }
+      } catch {}
 
-        // Micro toast (for focus toggles etc.)
-        const toastEl = document.getElementById('toast');
-        if (toastEl) {
-          let hideT;
-          const showToast = (msg) => {
-            toastEl.textContent = msg;
-            toastEl.classList.add('show');
-            clearTimeout(hideT);
-            hideT = setTimeout(() => toastEl.classList.remove('show'), 1100);
+      // Keystroke HUD: larger and only for shortcuts (modifiers or known app shortcuts)
+      const ks = document.getElementById('keystrokes');
+      if (ks) {
+        let hideTimer;
+        let hudDuration = 900;
+        const show = (label) => {
+          ks.textContent = label;
+          ks.classList.add('show');
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(() => ks.classList.remove('show'), hudDuration);
+        };
+        window.addEventListener('keydown', (e) => {
+          // Only show if it's a shortcut, not when typing in fields
+          const active = document.activeElement;
+          const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || (active instanceof HTMLElement && active.isContentEditable));
+          const key = e.key;
+          const isModifier = key === 'Shift' || key === 'Control' || key === 'Meta' || key === 'Alt';
+          const isPrintable = key.length === 1;
+          const known = ['Enter', 'Escape', 'Backspace', 'Delete', 'Tab'];
+          const appShortcuts = ['a', 'f']; // a=focus composer, f=focus signal
+          const isAppShortcut = appShortcuts.includes(key.toLowerCase());
+          const isShortcut = isModifier || e.metaKey || e.ctrlKey || e.altKey || known.includes(key) || isAppShortcut;
+          if (!isShortcut) return;
+          if (isPrintable && !isAppShortcut) return; // don't show raw character typing
+          if (isTyping && !isAppShortcut) return; // suppress when typing, except our app shortcuts
+
+          const parts = [];
+          if (e.metaKey) parts.push('Cmd');
+          if (e.ctrlKey) parts.push('Ctrl');
+          if (e.altKey) parts.push('Alt');
+          if (e.shiftKey) parts.push('Shift');
+          parts.push(isPrintable ? key.toUpperCase() : key);
+          show(parts.join('+'));
+        });
+        // Demo toggle extends HUD duration
+        const demoBtn = document.getElementById('demo-toggle');
+        if (demoBtn) {
+          let demo = false;
+          const setDemo = (v) => {
+            demo = v;
+            hudDuration = demo ? 1800 : 900;
+            demoBtn.classList.toggle('active', demo);
+            // Share with Svelte
+            window.__svns_demo = demo;
+            window.dispatchEvent(new CustomEvent('svns-demo', { detail: demo }));
           };
-          window.addEventListener('svns-toast', (e) => {
-            // @ts-ignore
-            showToast(e.detail || '');
-          });
+          demoBtn.addEventListener('click', () => setDemo(!demo));
         }
-    </script>
-  </body>
-</html>
----
-import TaskBoard from "../components/TaskBoard.svelte";
-import "../styles.css";
----
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Signal vs Noise</title>
-  </head>
-  <body>
-  <div id="cursor-glow"></div>
-  <div class="keystrokes" id="keystrokes"></div>
-  <div class="toast" id="toast"></div>
-  <div class="min-h-screen relative z-10">
-      <header class="px-5 py-3 flex items-center justify-between relative z-10 text-neutral-400">
-        <div class="text-sm opacity-80"><a href="/" class="hover:underline">Signal vs Noise</a></div>
-        <div class="flex items-center gap-4">
-          <button id="demo-toggle" class="icon-btn text-xs" title="Demo mode">Demo</button>
-          <div id="today" class="text-sm"></div>
-        </div>
-      </header>
-        <main class="px-5 relative z-10">
-        <TaskBoard client:load />
-        <footer class="px-1 py-6 mt-6 text-center text-neutral-500 text-xs">
-          <a href="/shortcuts" class="opacity-80 hover:opacity-100 hover:underline">Shortcuts</a>
-        </footer>
-      </main>
-    </div>
-  <script>
-    // Cursor-follow glow
-    const glow = document.getElementById('cursor-glow');
-        if (glow) {
-          let raf = 0; let x = '50%'; let y = '50%'; let pending = false;
-          const update = () => { pending = false; glow.style.setProperty('--x', x); glow.style.setProperty('--y', y); };
-          window.addEventListener('mousemove', (e) => {
-            x = e.clientX + 'px'; y = e.clientY + 'px';
-            if (!pending) { pending = true; raf = requestAnimationFrame(update); }
-          });
-        }
-
-    // Today label
-  const el = document.getElementById('today');
-      if (el) {
-        const d = new Date();
-        el.textContent = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
       }
-  // Force solid glass style by default
-  document.documentElement.classList.add('style-solid');
 
-        // Subtle click ripple for buttons
-        const addRipple = (target, x, y) => {
-          const rect = target.getBoundingClientRect();
-          const r = Math.max(rect.width, rect.height);
-          const span = document.createElement('span');
-          span.className = 'ripple';
-          span.style.width = span.style.height = r + 'px';
-          span.style.left = (x - rect.left - r/2) + 'px';
-          span.style.top = (y - rect.top - r/2) + 'px';
-          const prevPos = getComputedStyle(target).position;
-          if (prevPos === 'static') target.style.position = 'relative';
-          target.style.overflow = 'hidden';
-          target.appendChild(span);
-          span.addEventListener('animationend', () => {
-            span.remove();
-            if (prevPos === 'static') target.style.position = '';
-            target.style.overflow = '';
-          });
+      // Micro toast (for focus toggles etc.)
+      const toastEl = document.getElementById('toast');
+      if (toastEl) {
+        let hideT;
+        const showToast = (msg) => {
+          toastEl.textContent = msg;
+          toastEl.classList.add('show');
+          clearTimeout(hideT);
+          hideT = setTimeout(() => toastEl.classList.remove('show'), 1100);
         };
-        document.addEventListener('click', (e) => {
-          const t = e.target;
-          if (!(t instanceof HTMLElement)) return;
-          const btn = t.closest('.btn, .icon-btn');
-          if (btn instanceof HTMLElement) addRipple(btn, e.clientX, e.clientY);
+        window.addEventListener('svns-toast', (e) => {
+          // @ts-ignore
+          showToast(e.detail || '');
         });
-
-        // Parallax removed by request
-
-  // Keystroke HUD: larger and only for shortcuts (modifiers or known app shortcuts)
-        const ks = document.getElementById('keystrokes');
-        if (ks) {
-          let hideTimer;
-          let hudDuration = 900;
-          const show = (label) => {
-            ks.textContent = label;
-            ks.classList.add('show');
-            clearTimeout(hideTimer);
-            hideTimer = setTimeout(() => ks.classList.remove('show'), hudDuration);
-          };
-          window.addEventListener('keydown', (e) => {
-            // Only show if it's a shortcut, not when typing in fields
-            const active = document.activeElement;
-            const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || (active instanceof HTMLElement && active.isContentEditable));
-            const key = e.key;
-            const isModifier = key === 'Shift' || key === 'Control' || key === 'Meta' || key === 'Alt';
-            const isPrintable = key.length === 1;
-            const known = ['Enter', 'Escape', 'Backspace', 'Delete', 'Tab'];
-            const appShortcuts = ['a', 'f']; // a=focus composer, f=focus signal
-            const isAppShortcut = appShortcuts.includes(key.toLowerCase());
-            const isShortcut = isModifier || e.metaKey || e.ctrlKey || e.altKey || known.includes(key) || isAppShortcut;
-            if (!isShortcut) return;
-            if (isPrintable && !isAppShortcut) return; // don't show raw character typing
-            if (isTyping && !isAppShortcut) return; // suppress when typing, except our app shortcuts
-
-            const parts = [];
-            if (e.metaKey) parts.push('Cmd');
-            if (e.ctrlKey) parts.push('Ctrl');
-            if (e.altKey) parts.push('Alt');
-            if (e.shiftKey) parts.push('Shift');
-            parts.push(isPrintable ? key.toUpperCase() : key);
-            show(parts.join('+'));
-          });
-          // Demo toggle extends HUD duration
-          const demoBtn = document.getElementById('demo-toggle');
-          if (demoBtn) {
-            let demo = false;
-            const setDemo = (v) => {
-              demo = v;
-              hudDuration = demo ? 1800 : 900;
-              demoBtn.classList.toggle('active', demo);
-              // Share with Svelte
-              window.__svns_demo = demo;
-              window.dispatchEvent(new CustomEvent('svns-demo', { detail: demo }));
-            };
-            demoBtn.addEventListener('click', () => setDemo(!demo));
-          }
-        }
-
-        // Optional token gate for isolated testing
-        try {
-          const gateToken = (import.meta.env.PUBLIC_INVITE_TOKEN || '').trim();
-          if (gateToken) {
-            const u = new URL(window.location.href);
-            const t = (u.searchParams.get('t') || '').trim();
-            if (t !== gateToken) {
-              const overlay = document.createElement('div');
-              overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:50;color:#fff;backdrop-filter:blur(6px)';
-              overlay.innerHTML = '<div class="glass p-4"><div class="text-center">Access restricted. Append ?t=YOUR_TOKEN to the URL.</div></div>';
-              document.body.appendChild(overlay);
-            }
-          }
-        } catch {}
-
-        // Micro toast (for focus toggles etc.)
-        const toastEl = document.getElementById('toast');
-        if (toastEl) {
-          let hideT;
-          const showToast = (msg) => {
-            toastEl.textContent = msg;
-            toastEl.classList.add('show');
-            clearTimeout(hideT);
-            hideT = setTimeout(() => toastEl.classList.remove('show'), 1100);
-          };
-          window.addEventListener('svns-toast', (e) => {
-            // @ts-ignore
-            showToast(e.detail || '');
-          });
-        }
+      }
     </script>
   </body>
 </html>

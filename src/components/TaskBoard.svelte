@@ -229,6 +229,7 @@
       </header>
       <ul on:dragover={(e)=>allowDrop(e,'signal')} on:drop={(e)=>onDrop(e,'signal')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='signal' && !t.done) as t (t.id)}
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex: listitem is focusable to enable Space quick-peek -->
           <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
@@ -275,6 +276,7 @@
       </header>
       <ul on:dragover={(e)=>allowDrop(e,'noise')} on:drop={(e)=>onDrop(e,'noise')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='noise' && !t.done) as t (t.id)}
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex: listitem is focusable to enable Space quick-peek -->
           <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
