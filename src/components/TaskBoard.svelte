@@ -95,7 +95,7 @@
   }
   function cancelEdit() { editingId = null; editText = ''; }
 
-  function dispatchToast(msg: string) { window.dispatchEvent(new CustomEvent('svns-toast', { detail: msg })); }
+  function dispatchToast(msg: string) { /* toasts disabled */ }
 
   function parseComposer(raw: string): { list: List; text: string; force?: boolean; context?: string; open?: boolean; reason?: string } {
     let text = raw.trim(); let list: List = 'signal'; let force=false; let context=''; let open=false; let reason='';

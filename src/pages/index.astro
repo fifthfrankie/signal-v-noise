@@ -10,9 +10,8 @@ import "../styles.css";
     <title>Signal vs Noise</title>
   </head>
   <body>
-    <div id="cursor-glow"></div>
-    <div class="keystrokes" id="keystrokes"></div>
-    <div class="toast" id="toast"></div>
+  <div id="cursor-glow"></div>
+  <div class="keystrokes" id="keystrokes"></div>
     <div class="min-h-screen relative z-10">
       <header class="px-5 py-3 flex items-center justify-between relative z-10 text-neutral-400">
         <div class="text-sm opacity-80"><a href="/" class="hover:underline">Signal vs Noise</a></div>
@@ -143,21 +142,7 @@ import "../styles.css";
         }
       }
 
-      // Micro toast (for focus toggles etc.)
-      const toastEl = document.getElementById('toast');
-      if (toastEl) {
-        let hideT;
-        const showToast = (msg) => {
-          toastEl.textContent = msg;
-          toastEl.classList.add('show');
-          clearTimeout(hideT);
-          hideT = setTimeout(() => toastEl.classList.remove('show'), 1100);
-        };
-        window.addEventListener('svns-toast', (e) => {
-          // @ts-ignore
-          showToast(e.detail || '');
-        });
-      }
+  // Toast disabled per request: no action popups
     </script>
   </body>
 </html>
