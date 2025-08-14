@@ -212,17 +212,19 @@
   </div>
 
   <div class="glass p-4">
-    <input bind:this={inputEl} class="big" type="text" placeholder="> Write the next thing..." bind:value={input} on:keydown={handleComposerKeyDown} />
-    <div class="mt-2 flex items-center gap-2">
-      <button class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs" on:click={() => addFromComposer(false)}>
-        Signal (Enter)
-      </button>
-      <button class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs" on:click={() => addFromComposer(true)}>
-        Noise (Ctrl+Enter)
-      </button>
+    <div class="flex items-center gap-3">
+      <input bind:this={inputEl} class="big flex-1 w-auto" type="text" placeholder="> Write the next thing..." bind:value={input} on:keydown={handleComposerKeyDown} />
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="button" class="btn btn-primary" on:click={() => addFromComposer(false)}>
+          Signal (Enter)
+        </button>
+        <button type="button" class="btn btn-ghost" on:click={() => addFromComposer(true)}>
+          Noise (Ctrl+Enter)
+        </button>
+      </div>
     </div>
     {#if demoMode}
-      <div class="mt-1 text-xs text-neutral-500">Press A to focus the composer</div>
+      <div class="mt-2 text-xs text-neutral-500">Press A to focus the composer</div>
     {/if}
   </div>
 
