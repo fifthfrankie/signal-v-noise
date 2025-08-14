@@ -212,7 +212,15 @@
   </div>
 
   <div class="glass p-4">
-    <input bind:this={inputEl} class="big" type="text" placeholder="> Write the next thing… (! = force Signal, > = Noise, /meet)" bind:value={input} on:keydown={handleComposerKeyDown} />
+    <input bind:this={inputEl} class="big" type="text" placeholder="> Write the next thing..." bind:value={input} on:keydown={handleComposerKeyDown} />
+    <div class="mt-2 flex items-center gap-2">
+      <button class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs" on:click={() => addFromComposer(false)}>
+        Signal (Enter)
+      </button>
+      <button class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs" on:click={() => addFromComposer(true)}>
+        Noise (Ctrl+Enter)
+      </button>
+    </div>
     {#if demoMode}
       <div class="mt-1 text-xs text-neutral-500">Press A to focus the composer</div>
     {/if}
@@ -229,7 +237,7 @@
       </header>
       <ul on:dragover={(e)=>allowDrop(e,'signal')} on:drop={(e)=>onDrop(e,'signal')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='signal' && !t.done) as t (t.id)}
-          <!-- svelte-ignore a11y-no-noninteractive-tabindex: listitem is focusable to enable Space quick-peek -->
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
@@ -276,7 +284,7 @@
       </header>
       <ul on:dragover={(e)=>allowDrop(e,'noise')} on:drop={(e)=>onDrop(e,'noise')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='noise' && !t.done) as t (t.id)}
-          <!-- svelte-ignore a11y-no-noninteractive-tabindex: listitem is focusable to enable Space quick-peek -->
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
