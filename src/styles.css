@@ -137,3 +137,33 @@ input[type="text"].big:focus {
 
 /* Parallax tilt support */
 /* Parallax removed */
+
+/* Bigger checkbox for Completed */
+.checkbox-lg {
+  width: 18px; height: 18px;
+  accent-color: var(--neon-c1);
+}
+
+/* Keystroke HUD - bottom center with subtle animation */
+.keystrokes {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(10px) scale(0.98);
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e5e7eb;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,138,0,0.06) inset;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease, background-color .2s ease;
+}
+.keystrokes.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  background: rgba(255,255,255,0.1);
+}

@@ -337,7 +337,7 @@
   <ul on:dragover={(e)=>allowDrop(e,'done')} on:drop={(e)=>onDrop(e,'done')} class="space-y-2">
       {#each tasks.filter(t=>t.list==='done') as t (t.id)}
     <li class="p-3 rounded-lg bg-white/5 flex items-center gap-2">
-          <input type="checkbox" checked={selectedCompleted.has(t.id)} on:change={(e)=>onCompletedToggle(t.id, e)} />
+          <input type="checkbox" class="checkbox-lg" checked={selectedCompleted.has(t.id)} on:change={(e)=>onCompletedToggle(t.id, e)} />
           <div class="flex-1 opacity-80" style="opacity: {Math.max(0.4, 1 - (Date.now()-t.updatedAt)/ (14*86400000))}">{t.text}</div>
           <div class="text-xs text-neutral-500" title={new Date(t.updatedAt).toLocaleString()}>{formatAge(t.updatedAt)}</div>
         </li>
