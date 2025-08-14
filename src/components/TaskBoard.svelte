@@ -158,16 +158,17 @@
   }
   function restoreSelected() {
     tasks = tasks.map(t => selectedCompleted.has(t.id) ? { ...t, list: 'noise', done: false } : t);
-    selectedCompleted.clear(); save();
+  selectedCompleted = new Set(); save();
   }
   function deleteSelected() {
     tasks = tasks.filter(t => !selectedCompleted.has(t.id));
-    selectedCompleted.clear(); save();
+  selectedCompleted = new Set(); save();
   }
 
   function onCompletedToggle(id: string, event: Event) {
     const target = event.target as HTMLInputElement;
-    if (target.checked) selectedCompleted.add(id); else selectedCompleted.delete(id);
+  if (target.checked) selectedCompleted.add(id); else selectedCompleted.delete(id);
+  selectedCompleted = new Set(selectedCompleted);
   }
 
   function onGlobalKey(e: KeyboardEvent) {
@@ -175,7 +176,7 @@
     const typing = target && (['INPUT','TEXTAREA'].includes(target.tagName) || target.isContentEditable);
     if (!typing && e.key.toLowerCase()==='a') { inputEl?.focus(); e.preventDefault(); return; }
     if (!typing && e.key.toLowerCase()==='f') { toggleFocus(); e.preventDefault(); return; }
-    if (e.key===' ' && focusedId) { e.preventDefault(); peekId = focusedId; return; }
+  if (!typing && e.key===' ' && focusedId) { e.preventDefault(); peekId = focusedId; return; }
     if (e.key==='Escape' && editingId) { cancelEdit(); }
   }
   function onGlobalKeyUp(e: KeyboardEvent) {
@@ -333,9 +334,9 @@
         {/if}
       </div>
     </header>
-    <ul on:dragover={(e)=>allowDrop(e,'done')} on:drop={(e)=>onDrop(e,'done')} class="space-y-2">
+  <ul on:dragover={(e)=>allowDrop(e,'done')} on:drop={(e)=>onDrop(e,'done')} class="space-y-2">
       {#each tasks.filter(t=>t.list==='done') as t (t.id)}
-        <li class="p-3 rounded-lg bg-white/5 flex items-center gap-2" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd}>
+    <li class="p-3 rounded-lg bg-white/5 flex items-center gap-2">
           <input type="checkbox" checked={selectedCompleted.has(t.id)} on:change={(e)=>onCompletedToggle(t.id, e)} />
           <div class="flex-1 opacity-80" style="opacity: {Math.max(0.4, 1 - (Date.now()-t.updatedAt)/ (14*86400000))}">{t.text}</div>
           <div class="text-xs text-neutral-500" title={new Date(t.updatedAt).toLocaleString()}>{formatAge(t.updatedAt)}</div>

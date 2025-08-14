@@ -101,7 +101,7 @@ import "../styles.css";
           clearTimeout(hideTimer);
           hideTimer = setTimeout(() => ks.classList.remove('show'), hudDuration);
         };
-        window.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', (e) => {
           // Only show if it's a shortcut, not when typing in fields
           const active = document.activeElement;
           const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || (active instanceof HTMLElement && active.isContentEditable));
@@ -113,15 +113,18 @@ import "../styles.css";
           const isAppShortcut = appShortcuts.includes(key.toLowerCase());
           const isShortcut = isModifier || e.metaKey || e.ctrlKey || e.altKey || known.includes(key) || isAppShortcut;
           if (!isShortcut) return;
+          // don't show lone modifiers
+          if (isModifier && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) return;
           if (isPrintable && !isAppShortcut) return; // don't show raw character typing
           if (isTyping && !isAppShortcut) return; // suppress when typing, except our app shortcuts
 
           const parts = [];
-          if (e.metaKey) parts.push('Cmd');
+          // Show modifiers only once even if key equals a modifier
+          if (e.metaKey && key !== 'Meta') parts.push('Cmd');
           if (e.ctrlKey) parts.push('Ctrl');
           if (e.altKey) parts.push('Alt');
           if (e.shiftKey) parts.push('Shift');
-          parts.push(isPrintable ? key.toUpperCase() : key);
+          if (!isModifier) parts.push(isPrintable ? key.toUpperCase() : key);
           show(parts.join('+'));
         });
         // Demo toggle extends HUD duration
