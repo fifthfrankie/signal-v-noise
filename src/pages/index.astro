@@ -28,15 +28,32 @@ import "../styles.css";
       </main>
     </div>
     <script>
-      // Cursor-follow glow
+      // Cursor-follow glowing spotlight (lerped)
       const glow = document.getElementById('cursor-glow');
       if (glow) {
-        let raf = 0; let x = '50%'; let y = '50%'; let pending = false;
-        const update = () => { pending = false; glow.style.setProperty('--x', x); glow.style.setProperty('--y', y); };
-        window.addEventListener('mousemove', (e) => {
-          x = e.clientX + 'px'; y = e.clientY + 'px';
-          if (!pending) { pending = true; raf = requestAnimationFrame(update); }
-        });
+        let tx = window.innerWidth / 2; // target
+        let ty = window.innerHeight / 2;
+        let px = tx; // current
+        let py = ty;
+        let activeTimer;
+        const lerp = (a, b, n) => a + (b - a) * n;
+        const step = () => {
+          px = lerp(px, tx, 0.18);
+          py = lerp(py, ty, 0.18);
+          glow.style.setProperty('--x', px + 'px');
+          glow.style.setProperty('--y', py + 'px');
+          requestAnimationFrame(step);
+        };
+        step();
+        const setActive = () => {
+          glow.classList.add('active');
+          clearTimeout(activeTimer);
+          activeTimer = setTimeout(() => glow.classList.remove('active'), 2200);
+        };
+        window.addEventListener('pointermove', (e) => {
+          tx = e.clientX; ty = e.clientY; setActive();
+        }, { passive: true });
+        window.addEventListener('pointerdown', setActive, { passive: true });
       }
 
       // Today label

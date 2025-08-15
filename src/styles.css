@@ -109,18 +109,26 @@ input[type="text"].big:focus {
   box-shadow: 0 0 0 3px rgba(255,138,0,0.35), 0 8px 30px -12px rgba(255,138,0,0.35);
 }
 
-/* Cursor-follow glow layer */
+/* Cursor-follow glowing spotlight (Aceternity-style) */
 #cursor-glow {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
   --x: 50%;
   --y: 50%;
   background:
-  radial-gradient(620px 440px at var(--x) var(--y), rgba(255,138,0,0.16), transparent 62%),
-  radial-gradient(480px 340px at calc(var(--x) - 120px) calc(var(--y) + 80px), rgba(255,178,36,0.14), transparent 57%);
-  filter: blur(28px) saturate(110%);
-  opacity: .75;
+    radial-gradient(220px circle at var(--x) var(--y), rgba(255,138,0,0.22), transparent 42%),
+    radial-gradient(420px circle at calc(var(--x) + 60px) calc(var(--y) + 40px), rgba(255,178,36,0.12), transparent 48%);
+  filter: blur(24px) saturate(120%);
+  opacity: 0;
+  transition: opacity .18s ease, filter .2s ease;
 }
-/* no light mode */
+#cursor-glow.active { opacity: .65; }
+
+@media (prefers-reduced-motion: reduce) {
+  #cursor-glow { transition: none; filter: blur(18px); }
+}
 
 /* Ripple animation */
 .ripple {
