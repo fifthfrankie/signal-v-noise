@@ -10,7 +10,6 @@ import "../styles.css";
     <title>Signal vs Noise</title>
   </head>
   <body>
-  <div id="cursor-glow"></div>
   <div class="keystrokes" id="keystrokes"></div>
     <div class="min-h-screen relative z-10">
       <header class="px-5 py-3 flex items-center justify-between relative z-10 text-neutral-400">
@@ -28,33 +27,7 @@ import "../styles.css";
       </main>
     </div>
     <script>
-      // Cursor-follow glowing spotlight (lerped)
-      const glow = document.getElementById('cursor-glow');
-      if (glow) {
-        let tx = window.innerWidth / 2; // target
-        let ty = window.innerHeight / 2;
-        let px = tx; // current
-        let py = ty;
-        let activeTimer;
-        const lerp = (a, b, n) => a + (b - a) * n;
-        const step = () => {
-          px = lerp(px, tx, 0.18);
-          py = lerp(py, ty, 0.18);
-          glow.style.setProperty('--x', px + 'px');
-          glow.style.setProperty('--y', py + 'px');
-          requestAnimationFrame(step);
-        };
-        step();
-        const setActive = () => {
-          glow.classList.add('active');
-          clearTimeout(activeTimer);
-          activeTimer = setTimeout(() => glow.classList.remove('active'), 2200);
-        };
-        window.addEventListener('pointermove', (e) => {
-          tx = e.clientX; ty = e.clientY; setActive();
-        }, { passive: true });
-        window.addEventListener('pointerdown', setActive, { passive: true });
-      }
+  // Removed global cursor glow; per-card glow handled by Svelte component
 
       // Today label
       const el = document.getElementById('today');

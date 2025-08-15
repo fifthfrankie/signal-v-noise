@@ -129,6 +129,21 @@
   function allowDrop(e: DragEvent, list: List) { e.preventDefault(); overList = list; }
   function onDrop(e: DragEvent, list: List) { e.preventDefault(); const id = e.dataTransfer?.getData('text/plain') || dragId; if (id) move(id, list); }
 
+  // Per-card glow handlers
+  function onCardMove(e: MouseEvent) {
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    el.style.setProperty('--mx', mx + 'px');
+    el.style.setProperty('--my', my + 'px');
+    el.classList.add('glow-active');
+  }
+  function onCardLeave(e: MouseEvent) {
+    const el = e.currentTarget as HTMLElement;
+    el.classList.remove('glow-active');
+  }
+
   function toggleFocus() {
     focusSignal = !focusSignal; dispatchToast(focusSignal ? 'Focus: Signal only' : 'Focus: All');
   }
@@ -241,7 +256,7 @@
       <ul on:dragover={(e)=>allowDrop(e,'signal')} on:drop={(e)=>onDrop(e,'signal')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='signal' && !t.done) as t (t.id)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
+          <li class="p-3 rounded-lg bg-white/5 glow-card" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} on:mousemove={onCardMove} on:mouseleave={onCardLeave} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
             {:else}
@@ -288,7 +303,7 @@
       <ul on:dragover={(e)=>allowDrop(e,'noise')} on:drop={(e)=>onDrop(e,'noise')} class="space-y-2">
         {#each tasks.filter(t=>t.list==='noise' && !t.done) as t (t.id)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <li class="p-3 rounded-lg bg-white/5" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} tabindex="0" on:focus={() => focusedId = t.id}>
+          <li class="p-3 rounded-lg bg-white/5 glow-card" draggable on:dragstart={(e)=>onDragStart(e,t)} on:dragend={onDragEnd} on:mousemove={onCardMove} on:mouseleave={onCardLeave} tabindex="0" on:focus={() => focusedId = t.id}>
             {#if editingId === t.id}
               <input class="w-full bg-black/30 rounded-md px-2 py-1" bind:value={editText} on:keydown={(e)=>{ if(e.key==='Enter'){commitEdit();} if(e.key==='Escape'){cancelEdit();}}} />
             {:else}
@@ -336,7 +351,7 @@
     </header>
   <ul on:dragover={(e)=>allowDrop(e,'done')} on:drop={(e)=>onDrop(e,'done')} class="space-y-2">
       {#each tasks.filter(t=>t.list==='done') as t (t.id)}
-    <li class="p-3 rounded-lg bg-white/5 flex items-center gap-2">
+  <li class="p-3 rounded-lg bg-white/5 glow-card flex items-center gap-2" on:mousemove={onCardMove} on:mouseleave={onCardLeave}>
           <input type="checkbox" class="checkbox-lg" checked={selectedCompleted.has(t.id)} on:change={(e)=>onCompletedToggle(t.id, e)} />
           <div class="flex-1 opacity-80" style="opacity: {Math.max(0.4, 1 - (Date.now()-t.updatedAt)/ (14*86400000))}">{t.text}</div>
           <div class="text-xs text-neutral-500" title={new Date(t.updatedAt).toLocaleString()}>{formatAge(t.updatedAt)}</div>
