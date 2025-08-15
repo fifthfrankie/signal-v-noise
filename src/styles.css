@@ -8,6 +8,11 @@
   --neon-c2: rgba(255,178,36,1);  /* warm accent */
   --neon-glow1: 0.7;
   --neon-glow2: 0.5;
+  /* Mesh palette (warm/orange family) */
+  --mesh-a: #ff8a00;
+  --mesh-b: #ffb224;
+  --mesh-c: #ff5e00;
+  --mesh-d: #ffc777;
 }
 
 html, body, #app {
@@ -16,18 +21,24 @@ html, body, #app {
 html, body { overflow-x: hidden; }
 body {
   @apply bg-bg text-neutral-200 antialiased;
+  /* Mesh gradient background (dark) */
   background-image:
-  radial-gradient(1200px 800px at 10% 10%, rgba(255,138,0,0.14), transparent 60%),
-  radial-gradient(1000px 700px at 90% 20%, rgba(255,178,36,0.12), transparent 60%),
+    radial-gradient(900px 700px at 8% 12%, color-mix(in oklab, var(--mesh-a) 26%, transparent), transparent 60%),
+    radial-gradient(800px 700px at 88% 18%, color-mix(in oklab, var(--mesh-b) 22%, transparent), transparent 62%),
+    radial-gradient(900px 700px at 35% 85%, color-mix(in oklab, var(--mesh-c) 18%, transparent), transparent 60%),
+    radial-gradient(900px 700px at 70% 65%, color-mix(in oklab, var(--mesh-d) 16%, transparent), transparent 60%),
     linear-gradient(180deg, rgba(12,13,18,1) 0%, rgba(8,9,12,1) 100%);
 }
 
 .light body {
   color-scheme: light;
   color: #0b0c10;
+  /* Mesh gradient background (light) */
   background-image:
-    radial-gradient(1200px 800px at 10% 10%, rgba(69,193,255,0.12), transparent 60%),
-    radial-gradient(1000px 700px at 90% 20%, rgba(39,208,124,0.10), transparent 60%),
+    radial-gradient(900px 700px at 12% 16%, color-mix(in oklab, var(--mesh-a) 20%, transparent), transparent 60%),
+    radial-gradient(800px 700px at 88% 18%, color-mix(in oklab, var(--mesh-b) 18%, transparent), transparent 62%),
+    radial-gradient(900px 700px at 36% 82%, color-mix(in oklab, var(--mesh-c) 12%, transparent), transparent 60%),
+    radial-gradient(900px 700px at 70% 60%, color-mix(in oklab, var(--mesh-d) 12%, transparent), transparent 60%),
     linear-gradient(180deg, #f6f7fb 0%, #eef1f7 100%);
 }
 
@@ -42,14 +53,17 @@ body {
 .glass::before {
   content: "";
   position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
-  background: linear-gradient(135deg, var(--neon-c1), var(--neon-c2));
+  /* Mesh-flavored border glow */
+  background: conic-gradient(from 210deg at 50% 50%, var(--mesh-a), var(--mesh-b), var(--mesh-c), var(--mesh-a));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; /* Safari */
   mask-composite: exclude;     /* Others */
-  filter: drop-shadow(0 0 14px rgba(255,138,0,var(--neon-glow1))) drop-shadow(0 0 28px rgba(255,178,36,var(--neon-glow2)));
+  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--mesh-a) 70%, transparent))
+          drop-shadow(0 0 28px color-mix(in oklab, var(--mesh-b) 50%, transparent));
 }
-.glass:hover::before { filter: drop-shadow(0 0 18px rgba(255,138,0,calc(var(--neon-glow1) + 0.15))) drop-shadow(0 0 34px rgba(255,178,36,calc(var(--neon-glow2) + 0.15))); }
+.glass:hover::before { filter: drop-shadow(0 0 18px color-mix(in oklab, var(--mesh-a) 85%, transparent))
+  drop-shadow(0 0 34px color-mix(in oklab, var(--mesh-b) 65%, transparent)); }
 
 /* solid style defaults are enabled via class on html element */
 
@@ -179,7 +193,6 @@ input[type="text"].big:focus {
 /* Glowing effect on task cards (per-card pointer tracking) */
 .glow-card {
   position: relative;
-  border-radius: 12px;
   isolation: isolate; /* contain the glow */
   z-index: 0; /* create a local stacking context */
 }
@@ -191,9 +204,11 @@ input[type="text"].big:focus {
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
+  /* Mesh-style interactive glow ring */
   background:
-    radial-gradient(130px 130px at var(--mx, 50%) var(--my, 50%), rgba(255,138,0,0.55), transparent 60%),
-    radial-gradient(240px 200px at calc(var(--mx, 50%) + 56px) calc(var(--my, 50%) + 36px), rgba(255,178,36,0.35), transparent 64%);
+    radial-gradient(140px 140px at var(--mx, 50%) var(--my, 50%), color-mix(in oklab, var(--mesh-a) 60%, transparent), transparent 60%),
+    radial-gradient(260px 220px at calc(var(--mx, 50%) + 54px) calc(var(--my, 50%) + 38px), color-mix(in oklab, var(--mesh-b) 38%, transparent), transparent 66%),
+    radial-gradient(200px 180px at calc(var(--mx, 50%) - 44px) calc(var(--my, 50%) - 28px), color-mix(in oklab, var(--mesh-c) 28%, transparent), transparent 62%);
   filter: blur(12px) saturate(125%);
   transition: opacity .16s ease, filter .2s ease;
   z-index: 1; /* above the card background, below content */
