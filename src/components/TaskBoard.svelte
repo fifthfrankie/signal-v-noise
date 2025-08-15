@@ -245,7 +245,7 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-    <section class="glass p-4 relative">
+    <section class="glass p-4 relative glow-card" role="presentation" on:mousemove={onCardMove} on:mouseleave={onCardLeave}>
       <header class="flex items-center justify-between mb-2">
         <h2 class="font-semibold text-neutral-200">Signal</h2>
         <button class="icon-btn" on:click={toggleFocus} title="Focus Signal">
@@ -296,7 +296,7 @@
     </section>
 
     {#if !focusSignal}
-    <section class="glass p-4">
+  <section class="glass p-4 glow-card" role="presentation" on:mousemove={onCardMove} on:mouseleave={onCardLeave}>
       <header class="flex items-center justify-between mb-2">
         <h2 class="font-semibold text-neutral-200">Noise</h2>
       </header>
@@ -338,7 +338,7 @@
     {/if}
   </div>
 
-  <section class="glass p-4 mt-4">
+  <section class="glass p-4 mt-4 glow-card" role="presentation" on:mousemove={onCardMove} on:mouseleave={onCardLeave}>
     <header class="flex items-center justify-between mb-2">
       <h2 class="font-semibold text-neutral-200">Completed</h2>
       <div class="flex items-center gap-2 text-xs">
