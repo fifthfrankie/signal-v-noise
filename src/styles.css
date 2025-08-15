@@ -186,15 +186,15 @@ input[type="text"].big:focus {
   content: "";
   position: absolute;
   inset: 0;
-  padding: 1.5px; /* glow ring thickness */
+  padding: 2px; /* glow ring thickness */
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
   background:
-    radial-gradient(120px 120px at var(--mx, 50%) var(--my, 50%), rgba(255,138,0,0.35), transparent 60%),
-    radial-gradient(220px 180px at calc(var(--mx, 50%) + 48px) calc(var(--my, 50%) + 32px), rgba(255,178,36,0.22), transparent 62%);
-  filter: blur(9px) saturate(120%);
-  transition: opacity .18s ease;
+    radial-gradient(130px 130px at var(--mx, 50%) var(--my, 50%), rgba(255,138,0,0.55), transparent 60%),
+    radial-gradient(240px 200px at calc(var(--mx, 50%) + 56px) calc(var(--my, 50%) + 36px), rgba(255,178,36,0.35), transparent 64%);
+  filter: blur(12px) saturate(125%);
+  transition: opacity .16s ease, filter .2s ease;
   z-index: -1;
   /* mask center so only outline glows */
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

@@ -227,7 +227,7 @@
     </div>
   </div>
 
-  <div class="glass p-4">
+  <div class="glass p-4 glow-card" role="presentation" on:mousemove={onCardMove} on:mouseleave={onCardLeave}>
     <div class="flex items-center gap-3">
       <input bind:this={inputEl} class="big flex-1 w-auto" type="text" placeholder="> Write the next thing..." bind:value={input} on:keydown={handleComposerKeyDown} />
       <div class="flex items-center gap-2 shrink-0">
